@@ -148,12 +148,8 @@ public class Board extends JPanel
     }
 
     // 绘图
-    @Override
-    public void paint(Graphics g)
+    public void repaint(Graphics2D graphics)
     {
-        Graphics2D graphics = (Graphics2D)g;
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
-
         // 绘制棋盘
         // 画线
         graphics.setColor(Color.black);
@@ -375,7 +371,7 @@ public class Board extends JPanel
         return chequers[pos.group][pos.num];
     }
 
-    public Team checkSituation()  // 检查状态，返回赢的队伍或者或者draw或者noTeam
+    public Team checkSituation()  // 检查状态，返回赢的队伍或者或者draw或者Team.noTeam
     {
         Team result = Team.noTeam;
 
@@ -508,41 +504,581 @@ public class Board extends JPanel
         return result;
     }
 
-    public Vector <Pos> move(Pos a, Pos b)  // 移动棋子，返回移动路径
+    public Vector <Pos> move(Pos from, Pos to)  // 移动棋子，返回移动路径
     {
-        // TODO
-        return new Vector <Pos> ();
+        Vector <Pos> result = isValidMove(from, to);
+        if(!result.isEmpty())
+        {
+            Chequer temp = chequers[from.group][from.num];
+            chequers[from.group][from.num] = chequers[to.group][to.num];
+            chequers[to.group][to.num] = temp;
+        }
+        return result;
     }
 
-    public Vector <Pos> isValidMove(Pos a, Pos b)
+    public Vector <Pos> isValidMove(Pos from, Pos to)
     {
-        // TODO
-        return new Vector<Pos>();
+        nowPath = new Vector<Pos>();
+        shortestLength = 99999;
+        shortestNowPath = new Vector <Pos> ();
+        nowJumpLength = -1;
+
+        for(char i = '0'; i <= 'F'; i++)
+            for(int j = 0; j <= 9; j++)
+                visited[i][j] = false;
+        go(from, to);
+        return shortestNowPath;
     }
 
     // 搜索
-    public Vector <Pos> nearPoints(Pos pos, NearPointsMode mode, int jumpLength)  // 寻找附近能跳的点
+    public Vector <Pos> nearPoints(Pos from, NearPointsMode mode, int jumpLength)  // 寻找附近能跳的点
     {
-        // TODO
-        return new Vector<Pos>();
+        Vector <Pos> to = new Vector<Pos>();
+
+        //第一次跳
+        if(mode == NearPointsMode.goAndJump)
+        {
+            // 相邻点
+            Pos temp;
+
+            temp = new Coor(from).add(new Coor(Settings.SCALE, 0));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+            temp = new Coor(from).add(new Coor(-Settings.SCALE, 0));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+            temp = new Coor(from).add(new Coor((int)Math.round(Settings.SCALE * 0.5), (int)Math.round(Settings.SCALE * Math.sqrt(3) / 2.0)));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+            temp = new Coor(from).add(new Coor((int)Math.round(-Settings.SCALE * 0.5), (int)Math.round(-Settings.SCALE * Math.sqrt(3) / 2.0)));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+            temp = new Coor(from).add(new Coor((int)Math.round(-Settings.SCALE * 0.5), (int)Math.round(Settings.SCALE * Math.sqrt(3) / 2.0)));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+            temp = new Coor(from).add(new Coor((int)Math.round(Settings.SCALE * 0.5), (int)Math.round(-Settings.SCALE * Math.sqrt(3) / 2.0)));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+
+            // 不相邻点
+            int nowPoints, mid;
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor(i * Settings.SCALE, 0));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor(-i * Settings.SCALE, 0));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+        }
+
+        // 多次跳
+        else
+        {
+            int nowPoints, mid;
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor(i * Settings.SCALE, 0));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor(-i * Settings.SCALE, 0));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+        }
+
+        return to;
     }
 
-    public Vector <Pos> nearPoints(Pos pos, NearPointsMode mode)  // 寻找附近能跳的点
+    public Vector <Pos> nearPoints(Pos from, NearPointsMode mode)  // 寻找附近能跳的点
     {
         int jumpLength = 0;
-        // TODO
-        return new Vector<Pos>();
+        Vector <Pos> to = new Vector<Pos>();
+
+        //第一次跳
+        if(mode == NearPointsMode.goAndJump)
+        {
+            // 相邻点
+            Pos temp;
+
+            temp = new Coor(from).add(new Coor(Settings.SCALE, 0));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+            temp = new Coor(from).add(new Coor(-Settings.SCALE, 0));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+            temp = new Coor(from).add(new Coor((int)Math.round(Settings.SCALE * 0.5), (int)Math.round(Settings.SCALE * Math.sqrt(3) / 2.0)));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+            temp = new Coor(from).add(new Coor((int)Math.round(-Settings.SCALE * 0.5), (int)Math.round(-Settings.SCALE * Math.sqrt(3) / 2.0)));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+            temp = new Coor(from).add(new Coor((int)Math.round(-Settings.SCALE * 0.5), (int)Math.round(Settings.SCALE * Math.sqrt(3) / 2.0)));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+            temp = new Coor(from).add(new Coor((int)Math.round(Settings.SCALE * 0.5), (int)Math.round(-Settings.SCALE * Math.sqrt(3) / 2.0)));
+            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+                to.add(temp);
+
+            // 不相邻点
+            int nowPoints, mid;
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor(i * Settings.SCALE, 0));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor(-i * Settings.SCALE, 0));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; ; i ++)
+            {
+                temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    continue;
+                }
+                if(nowPoints == 1 && i == 2 * mid)
+                    to.add(temp);
+            }
+        }
+
+        // 多次跳
+        else
+        {
+            int nowPoints, mid;
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor(i * Settings.SCALE, 0));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor(-i * Settings.SCALE, 0));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+            mid = nowPoints = 0;
+            for(int i = 1; i <= jumpLength; i ++)
+            {
+                Pos temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
+                if(temp.group == 0 || nowPoints > 1)
+                    break;
+                if(at(temp).getTeam() != Team.noTeam)
+                {
+                    nowPoints++;
+                    mid = i;
+                    if(mid != jumpLength / 2)
+                        break;
+                    continue;
+                }
+                if(nowPoints == 1 && i == jumpLength)
+                    to.add(temp);
+            }
+        }
+
+        return to;
     }
 
-    public void go(Pos a, Pos b)
+    public void go(Pos from, Pos to)
     {
-       // TODO
+        if(!canTo[from.group][from.num])
+        {
+            canTo[from.group][from.num] = true;
+        }
+
+        if(from.group == to.group && from.num == to.num)
+        {
+            if(shortestLength > nowPath.size())
+            {
+                shortestLength = nowPath.size();
+                shortestNowPath = nowPath;
+            }
+            return;
+        }
+
+        Vector <Pos> nowPoints = new Vector<Pos>();
+        if(nowJumpLength == -1)
+            nowPoints = nearPoints(from, NearPointsMode.goAndJump);
+        else
+            nowPoints = nearPoints(from, NearPointsMode.jump, nowJumpLength);
+
+        while(!nowPoints.isEmpty())
+        {
+            Pos newFrom = nowPoints.firstElement();
+            nowPoints.remove(0);
+            if(visited[newFrom.group][newFrom.num])
+                continue;
+
+            if(nowJumpLength == -1)
+            {
+                nowJumpLength = Utils.distance(from, newFrom);
+
+                visited[newFrom.group][newFrom.num] = true;
+                nowPath.add(newFrom);
+                go(newFrom, to);
+                nowPath.remove(nowPath.size() - 1);
+                visited[newFrom.group][newFrom.num] = false;
+
+                nowJumpLength = -1;
+            }
+            else
+            {
+                visited[newFrom.group][newFrom.num] = true;
+                nowPath.add(newFrom);
+                go(newFrom, to);
+                nowPath.remove(nowPath.size() - 1);
+                visited[newFrom.group][newFrom.num] = false;
+            }
+        }
+
+        return;
     }
 
-    public Vector <Pos> canAccess(Pos p)
+    public Vector <Pos> canAccess(Pos pos)
     {
-        // TODO
-        return new Vector<Pos>();
+        for(int i = 0; i < 255; i++)
+        {
+            for(int j = 0; j < 10; j++)
+            {
+                canTo[i][j] = false;
+            }
+        }
+
+        Vector <Pos> result = new Vector <Pos> ();
+        Pos outside = new Pos((char)0, 0);
+        move(pos, outside);
+
+        for(int i = '0'; i <= 'F'; i++)
+        {
+            for(int j = 0; j < 10; j++)
+            {
+                if(canTo[i][j] && (pos.group != i|| pos.num != j))
+                    result.add(new Pos((char)i, j));
+            }
+        }
+
+        return result;
     }
 
     // 普通数据成员

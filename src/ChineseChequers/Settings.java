@@ -15,7 +15,7 @@ public class Settings
 
     // 定义需要用到的常量（待完善）
     // 棋盘属性
-    static final int WIDTH = 1200; // 窗口宽度
+    static final int WIDTH = 1300; // 窗口宽度
     static final int HEIGHT = 900; // 窗口高度
     static final int SCALE = 50;   // 棋盘缩放系数，指相邻两个棋子的距离
     static final int BOARD_SIZE = 900; // 正方形棋盘的边长

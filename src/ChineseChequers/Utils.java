@@ -388,8 +388,13 @@ public class Utils
         return new Pos((char)0, 0);
     }
 
-    int distance(Coor a, Coor b)
+    static int distance(Coor a, Coor b)
     {
         return (int)Math.round(Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)) / Settings.SCALE);
+    }
+
+    static int distance(Pos a, Pos b)
+    {
+        return distance(new Coor(a), new Coor(b));
     }
 }

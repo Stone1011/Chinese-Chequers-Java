@@ -20,6 +20,13 @@ class Pos
         num = i;
     }
 
+    public Pos(Coor t)
+    {
+        Pos x = Utils.coorToPos(t);
+        group = x.group;
+        num = x.num;
+    }
+
     // 类型转换函数
     public Coor toCoor()
     {
@@ -54,6 +61,13 @@ class Coor
         y = b;
     }
 
+    public Coor(Pos from)
+    {
+        Coor t = Utils.posToCoor(from);
+        x = t.x;
+        y = t.y;
+    }
+
     // 类型转换函数
     public Pos toPos()
     {
@@ -65,4 +79,10 @@ class Coor
         return Utils.posToInt(toPos());
     }
 
+    // 操作函数
+    public Pos add(Coor other)
+    {
+        Coor t = new Coor(x + other.x, y + other.y);
+        return new Pos(t);
+    }
 };

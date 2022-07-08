@@ -105,26 +105,6 @@ public class ChineseChequers extends JFrame
 
             else if((board.getStatus() == BoardStatus.finished))
             {
-//                messageBox.append("游戏将在3秒后重新开始！\n3");
-//                messageBox.repaint();
-//
-//                long t = System.currentTimeMillis();
-//                int tt = 0;
-//                while(System.currentTimeMillis() - t < 1000)
-//                    tt++;
-//                messageBox.append("2\n");
-//                messageBox.repaint();
-//
-//                t = System.currentTimeMillis();
-//                while(System.currentTimeMillis() - t < 1000)
-//                    tt++;
-//                messageBox.append("1\n");
-//                messageBox.repaint();
-//
-//                t = System.currentTimeMillis();
-//                while(System.currentTimeMillis() - t < 1000)
-//                    tt++;
-
                 board.setStatus(BoardStatus.initial);
                 lastBoard.setStatus(BoardStatus.initial);
                 actionPerformed(e);
@@ -202,7 +182,7 @@ public class ChineseChequers extends JFrame
                 messageBox.append("悔棋成功！\n");
             }
 
-            board = lastBoard;
+            board = new Board(lastBoard);
             repaint();
         }
     }
@@ -236,7 +216,7 @@ public class ChineseChequers extends JFrame
                 //目前点击的位置
                 Chequer nowClicked = board.at(new Coor(mouse.getX(), mouse.getY()).toPos());
                 Pos nowPos = new Coor(mouse.getX(), mouse.getY()).toPos();
-                lastBoard = board;
+                lastBoard = new Board(board);
                 /*如果这个地方是棋子*/
                 if (nowClicked.getTeam() != Team.noTeam)
                 {

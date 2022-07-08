@@ -16,6 +16,25 @@ public class Board extends JPanel
         teamNum = 0;
         nowTeam = Team.one;
     }
+
+    public Board(Board newBoard)
+    {
+        status = newBoard.status;
+        teamNum = newBoard.teamNum;
+        nowTeam = newBoard.nowTeam;
+        nowPath = newBoard.nowPath;
+        nowSelected = newBoard.nowSelected;
+        shortestNowPath = newBoard.shortestNowPath;
+        shortestLength = newBoard.shortestLength;
+
+        for(int i = 0; i < 256; i++)
+        {
+            for(int j = 0; j < 20; j++)
+            {
+                chequers[i][j] = newBoard.chequers[i][j];
+            }
+        }
+    }
     
     public Board(int _teamNum)
     {

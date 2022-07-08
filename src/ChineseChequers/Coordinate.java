@@ -1,5 +1,7 @@
 package ChineseChequers;
 
+import java.util.Set;
+
 // Pos类
 class Pos
 {
@@ -38,6 +40,10 @@ class Pos
         return (group << 16) + num;
     }
 
+    public boolean equalsTo(Pos other)
+    {
+        return group == other.group && num == other.num;
+    }
 };
 
 
@@ -84,5 +90,10 @@ class Coor
     {
         Coor t = new Coor(x + other.x, y + other.y);
         return new Pos(t);
+    }
+
+    public boolean equalsTo(Coor coor)
+    {
+        return Math.sqrt((x - coor.x) * (x - coor.x) + (y - coor.y) * (y - coor.y)) <= Settings.EQUAL_LIMIT;
     }
 };

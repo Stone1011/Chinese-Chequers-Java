@@ -340,13 +340,13 @@ public class Board extends JPanel
         // 画提示
         if(getStatus() == BoardStatus.started)
         {
-            graphics.drawString("是现在该走的一方", 655 * Settings.BOARD_SIZE / 900,50 * Settings.BOARD_SIZE / 900);
+            graphics.drawString("是现在该走的一方", 655 * Settings.BOARD_SIZE / 900,120 * Settings.BOARD_SIZE / 900);
             graphics.setColor(Settings.CHEQUER_COLOR[nowTeam.ordinal()]);
-            graphics.fillOval(620 * Settings.BOARD_SIZE / 900,42 * Settings.BOARD_SIZE / 900, 2*Settings.CHEQUER_RADIUS, 2*Settings.CHEQUER_RADIUS);
+            graphics.fillOval(620 * Settings.BOARD_SIZE / 900,105 * Settings.BOARD_SIZE / 900, 2*Settings.CHEQUER_RADIUS, 2*Settings.CHEQUER_RADIUS);
         }
         else if(getStatus() == BoardStatus.paused)
         {
-            graphics.drawString("暂停中", 655 * Settings.BOARD_SIZE / 900,50 * Settings.BOARD_SIZE / 900);
+            graphics.drawString("暂停中", 655 * Settings.BOARD_SIZE / 900,120 * Settings.BOARD_SIZE / 900);
         }
 
         // 画棋子
@@ -1012,7 +1012,8 @@ public class Board extends JPanel
             if(shortestLength > nowPath.size())
             {
                 shortestLength = nowPath.size();
-                shortestNowPath = nowPath;
+                shortestNowPath = new Vector<Pos>();
+                shortestNowPath.addAll(nowPath);
             }
             return;
         }
@@ -1082,16 +1083,16 @@ public class Board extends JPanel
     }
 
     // 普通数据成员
-    private final Chequer [][] chequers = new Chequer[256][20];
-    private BoardStatus status;
+    final Chequer [][] chequers = new Chequer[256][20];
+    private BoardStatus status = BoardStatus.initial;
     private int teamNum;
-    private Team nowTeam;
-    private Pos nowSelected;
+    Team nowTeam = Team.noTeam;
+    Pos nowSelected = new Pos();
 
     // 路径数据成员
-    private Vector <Pos> nowPath = new Vector<Pos>();  // 当前的跳棋跳的路径
+    Vector <Pos> nowPath = new Vector<Pos>();  // 当前的跳棋跳的路径
     private Vector <Pos> shortestNowPath = new Vector<Pos>();  // 当前的最短路径
-    private final boolean [][] canTo = new boolean[256][20];
+    final boolean [][] canTo = new boolean[256][20];
     private int shortestLength;
     private int nowJumpLength;
     private final boolean [][] visited = new boolean[256][20];  // 是否访问过节点

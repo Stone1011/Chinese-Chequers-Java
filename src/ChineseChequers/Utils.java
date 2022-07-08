@@ -369,7 +369,7 @@ public class Utils
             {
                 Pos temp = new Pos(i, j);
                 Coor tempCoor = temp.toCoor();
-                if(coor == tempCoor)
+                if(coor.equalsTo(tempCoor))
                     return temp;
             }
         }
@@ -380,7 +380,7 @@ public class Utils
             {
                 Pos temp = new Pos(i, j);
                 Coor tempCoor = temp.toCoor();
-                if(coor == tempCoor)
+                if(coor.equalsTo(tempCoor))
                     return temp;
             }
         }

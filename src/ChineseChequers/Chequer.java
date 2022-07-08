@@ -56,12 +56,12 @@ public class Chequer
                 Coor coor = Utils.posToCoor(pos);
                 Color nowColor = new Color(Color.gray.getRed(), Color.gray.getGreen(), Color.gray.getBlue(), 75);
                 graphics.setColor(nowColor);
-                graphics.fillOval(coor.x, coor.y, 2* Settings.CHEQUER_RADIUS, 2*Settings.CHEQUER_RADIUS);
+                graphics.fillOval(coor.x-Settings.CHEQUER_RADIUS, coor.y-Settings.CHEQUER_RADIUS, 2* Settings.CHEQUER_RADIUS, 2*Settings.CHEQUER_RADIUS);
 
                 float[] dashPattern = {0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f};
                 graphics.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10F /*miter limit */, dashPattern, 0));
                 graphics.setColor(Color.red);
-                graphics.drawOval(coor.x, coor.y, 2* Settings.CHEQUER_RADIUS, 2*Settings.CHEQUER_RADIUS);
+                graphics.drawOval(coor.x-Settings.CHEQUER_RADIUS, coor.y-Settings.CHEQUER_RADIUS, 2* Settings.CHEQUER_RADIUS, 2*Settings.CHEQUER_RADIUS);
 
                 graphics.setStroke(new BasicStroke(1));
             }

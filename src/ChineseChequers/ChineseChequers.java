@@ -3,6 +3,9 @@ package ChineseChequers;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Vector;
+
+import ChineseChequers.Settings.*;
 
 public class ChineseChequers extends JFrame
 {
@@ -13,7 +16,7 @@ public class ChineseChequers extends JFrame
     private JButton regretButton;
     private JTextField playerNum;
     private JButton backButton;
-    private JTextPane messageBox;
+    private JTextArea messageBox;
 
     public ChineseChequers()
     {
@@ -59,7 +62,73 @@ public class ChineseChequers extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            // todo
+            if((board.getStatus() == BoardStatus.initial))
+            {
+                messageBox.setText("");
+                //确定玩家人数
+                if(playerNum.getText().equals(""))
+                {
+                    messageBox.append("请输入玩家人数 (2, 3, 6人)\n");
+                    repaint();
+                    return;
+                }
+                int num = Integer.parseInt(playerNum.getText());
+
+                if((num!=2)&&(num!=3)&&(num!=6))
+                {
+                    messageBox.append("人数输入无效！\n");
+                    repaint();
+                    return;
+                }
+                else
+                {
+                    board = new Board(num);
+                    lastBoard = new Board(num);
+                }
+                messageBox.append("游戏开始！\n");
+                startButton.setText("认输");
+                board.setStatus(BoardStatus.started);
+                lastBoard.setStatus(BoardStatus.started);
+
+                repaint();
+            }
+
+            else if((board.getStatus() == BoardStatus.started))
+            {
+                messageBox.append("认输！\n");
+                startButton.setText("开始");
+                board.setStatus(BoardStatus.finished);
+                lastBoard.setStatus(BoardStatus.finished);
+
+                repaint();
+            }
+
+            else if((board.getStatus() == BoardStatus.finished))
+            {
+//                messageBox.append("游戏将在3秒后重新开始！\n3");
+//                messageBox.repaint();
+//
+//                long t = System.currentTimeMillis();
+//                int tt = 0;
+//                while(System.currentTimeMillis() - t < 1000)
+//                    tt++;
+//                messageBox.append("2\n");
+//                messageBox.repaint();
+//
+//                t = System.currentTimeMillis();
+//                while(System.currentTimeMillis() - t < 1000)
+//                    tt++;
+//                messageBox.append("1\n");
+//                messageBox.repaint();
+//
+//                t = System.currentTimeMillis();
+//                while(System.currentTimeMillis() - t < 1000)
+//                    tt++;
+
+                board.setStatus(BoardStatus.initial);
+                lastBoard.setStatus(BoardStatus.initial);
+                actionPerformed(e);
+            }
         }
     }
 
@@ -68,7 +137,14 @@ public class ChineseChequers extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            // todo
+            int confirm = JOptionPane.showConfirmDialog(null, "请确认是否重新开始！","请确认", JOptionPane.YES_NO_OPTION);
+            if(confirm != JOptionPane.YES_OPTION)
+                return;
+
+            board.setStatus(BoardStatus.finished);
+            lastBoard.setStatus(BoardStatus.finished);
+            new StartAction().actionPerformed(e);
+            repaint();
         }
     }
 
@@ -77,7 +153,21 @@ public class ChineseChequers extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            // todo
+            if(board.getStatus() == BoardStatus.paused)
+            {
+                messageBox.append("游戏恢复！\n");
+                pauseButton.setText("暂停");
+                board.setStatus(BoardStatus.started);
+                repaint();
+            }
+
+            else if(board.getStatus() == BoardStatus.started)
+            {
+                messageBox.append("游戏暂停！\n");
+                pauseButton.setText("恢复");
+                board.setStatus(BoardStatus.paused);
+                repaint();
+            }
         }
     }
 
@@ -86,7 +176,34 @@ public class ChineseChequers extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            // todo
+            boolean equal = true;
+            for(char i = '0'; i <= 'F'; i++)
+            {
+                for(int j = 0; j < 9; j++)
+                {
+                    lastBoard.at(new Pos(i, j)).setStatus(ChequerStatus.unselected);
+                    lastBoard.nowSelected = new Pos((char)0, 0);
+                    if(lastBoard.at(new Pos(i, j)).getTeam() != board.at(new Pos(i, j)).getTeam())
+                    {
+                        equal = false;
+                    }
+                }
+            }
+
+            if(board.getStatus() != BoardStatus.started || equal)
+            {
+                String a = "悔棋无效！\n";
+                messageBox.append(a);
+                messageBox.repaint();
+                return;
+            }
+            else
+            {
+                messageBox.append("悔棋成功！\n");
+            }
+
+            board = lastBoard;
+            repaint();
         }
     }
 
@@ -95,16 +212,145 @@ public class ChineseChequers extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            // todo
+            // TODO: fix after designing main window
         }
     }
 
     class MouseAction implements MouseListener
     {
         @Override
-        public void mouseClicked(MouseEvent e)
+        public void mouseClicked(MouseEvent mouse)
         {
-            // todo
+            //计算棋盘上之前有没有被选中的棋子数目
+            int cnt_selected = 0;
+            if (board.nowSelected.group != 0 || board.nowSelected.num != 0)
+                cnt_selected++;
+
+            //如果是有效点击
+            if (mouse.getButton() == MouseEvent.BUTTON1 && !(new Coor(mouse.getX(), mouse.getY()).toPos().equalsTo(new Pos((char) 0, 0)))
+                    && board.getStatus() == BoardStatus.started &&
+                    (board.at(new Coor(mouse.getX(), mouse.getY()).toPos()).getTeam() == board.nowTeam ||
+                            board.at(new Coor(mouse.getX(), mouse.getY()).toPos()).getTeam() == Team.noTeam)
+            )
+            {
+                //目前点击的位置
+                Chequer nowClicked = board.at(new Coor(mouse.getX(), mouse.getY()).toPos());
+                Pos nowPos = new Coor(mouse.getX(), mouse.getY()).toPos();
+                lastBoard = board;
+                /*如果这个地方是棋子*/
+                if (nowClicked.getTeam() != Team.noTeam)
+                {
+                    /*如果这个棋子之前是被选中的状态*/
+                    if (nowClicked.getStatus() == ChequerStatus.selected)
+                    {
+                        nowClicked.setStatus(ChequerStatus.unselected);
+                        Vector<Pos> originalAccess = board.canAccess(nowPos);
+                        while (!originalAccess.isEmpty())
+                        {
+                            Pos temp = originalAccess.firstElement();
+                            originalAccess.remove(0);
+                            board.at(temp).setStatus(ChequerStatus.unselected);
+                        }
+                        board.nowSelected = new Pos((char) 0, 0);
+                    }
+                    /*如果这个棋子之前是非选中状态*/
+                    else if (nowClicked.getStatus() == ChequerStatus.unselected)
+                    {
+                        /*如果棋盘上之前没有选中的棋子*/
+                        if (cnt_selected == 0)
+                        {
+                            nowClicked.setStatus(ChequerStatus.selected);
+                            board.nowSelected = new Coor(mouse.getX(), mouse.getY()).toPos();
+                        }
+                        /*如果棋盘上之前有被选中的棋子*/
+                        else
+                        {
+                            board.at(board.nowSelected).setStatus(ChequerStatus.unselected);
+
+                            Vector<Pos> originalAccess = board.canAccess(board.nowSelected);
+                            while (!originalAccess.isEmpty())
+                            {
+                                Pos temp = originalAccess.firstElement();
+                                originalAccess.remove(0);
+                                board.at(temp).setStatus(ChequerStatus.unselected);
+                            }
+
+                            nowClicked.setStatus(ChequerStatus.selected);
+                            board.nowSelected = new Coor(mouse.getX(), mouse.getY()).toPos();
+                        }
+
+                        // 确认能走的
+                        Vector<Pos> can = board.canAccess(board.nowSelected);
+                        while (!can.isEmpty())
+                        {
+                            Pos temp = can.firstElement();
+                            can.remove(0);
+                            board.at(temp).setStatus(ChequerStatus.accessing);
+                        }
+                    }
+                    repaint();
+                }
+                /*如果这个地方是非棋子*/
+                else
+                {
+                    /*如果棋盘上之前没有选中的棋子*/
+                    // NULL
+                    /*如果棋盘上之前有被选中的棋子*/
+                    if (cnt_selected != 0)
+                    {
+                        /*如果移动正确*/
+                        Coor temp = new Coor(mouse.getX(), mouse.getY());
+                        Pos pos = temp.toPos();
+                        Vector<Pos> tempPath = board.move(board.nowSelected, pos);
+                        board.at(pos).setStatus(ChequerStatus.unselected);
+                        if (!tempPath.isEmpty())
+                        {
+                            board.circulateTeam();
+
+                            board.nowPath = tempPath;
+                            board.nowPath.add(0, board.nowSelected);
+
+                            for (int i = '0'; i <= 'F'; i++)
+                            {
+                                for (int j = 0; j < 10; j++)
+                                {
+                                    board.canTo[i][j] = false;
+                                    if (board.chequers[i][j].getStatus() == ChequerStatus.accessing)
+                                        board.chequers[i][j].setStatus(ChequerStatus.unselected);
+                                }
+                            }
+
+                            board.nowSelected = new Pos((char) 0, 0);
+                            board.at(board.nowSelected).setStatus(ChequerStatus.unselected);
+                            nowClicked.setStatus(ChequerStatus.unselected);
+
+                            if (board.nowTeam == Team.one)
+                            {
+                                Team winner = board.checkSituation();
+                                if (winner != Team.noTeam)
+                                {
+                                    board.setStatus(BoardStatus.finished);
+                                    startButton.setText("开始");
+                                    if (winner == Team.draw)
+                                    {
+                                        messageBox.append("平局");
+                                    } else
+                                    {
+                                        String str = "玩家";
+                                        String[] numChar = {"一", "二", "三", "四", "五", "六"};
+                                        String str2 = "取得了胜利！";
+                                        str += numChar[winner.ordinal()];
+                                        str += str2;
+                                        str += "\n";
+                                        messageBox.append(str);
+                                    }
+                                }
+                            }
+                            repaint();
+                        }
+                    }
+                }
+            }
         }
 
         @Override

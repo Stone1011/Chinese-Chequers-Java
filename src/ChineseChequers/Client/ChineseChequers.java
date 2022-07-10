@@ -1,11 +1,11 @@
-package ChineseChequers;
+package ChineseChequers.Client;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 
-import ChineseChequers.Settings.*;
+import ChineseChequers.Client.Settings.*;
 
 public class ChineseChequers extends JFrame
 {

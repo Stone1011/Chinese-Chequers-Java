@@ -1,4 +1,4 @@
-package ChineseChequers;
+package ChineseChequers.Client;
 
 public class Utils
 {

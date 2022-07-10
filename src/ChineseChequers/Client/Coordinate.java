@@ -1,6 +1,4 @@
-package ChineseChequers;
-
-import java.util.Set;
+package ChineseChequers.Client;
 
 // Pos类
 class Pos

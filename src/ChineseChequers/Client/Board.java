@@ -1,6 +1,4 @@
-package ChineseChequers;
-
-import ChineseChequers.Settings.*;
+package ChineseChequers.Client;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +10,9 @@ public class Board extends JPanel
     // 构造函数和析构函数
     public Board()
     {
-        status = BoardStatus.initial;
+        status = Settings.BoardStatus.initial;
         teamNum = 0;
-        nowTeam = Team.one;
+        nowTeam = Settings.Team.one;
     }
 
     public Board(Board newBoard)
@@ -38,8 +36,8 @@ public class Board extends JPanel
     
     public Board(int _teamNum)
     {
-        status = BoardStatus.initial;
-        nowTeam = Team.one;
+        status = Settings.BoardStatus.initial;
+        nowTeam = Settings.Team.one;
         teamNum = _teamNum;
 
         for(int i = 0; i < 255; i++)
@@ -62,53 +60,53 @@ public class Board extends JPanel
         {
             for(int i = 0; i < 10; i++)
             {
-                chequers['A'][i].setTeam(Team.one);
+                chequers['A'][i].setTeam(Settings.Team.one);
             }
             for(int i = 0; i < 10; i++)
             {
-                chequers['B'][i].setTeam(Team.two);
+                chequers['B'][i].setTeam(Settings.Team.two);
             }
         }
         else if(teamNum == 3)
         {
             for(int i = 0; i < 10; i++)
             {
-                chequers['A'][i].setTeam(Team.one);
+                chequers['A'][i].setTeam(Settings.Team.one);
             }
             for(int i = 0; i < 10; i++)
             {
-                chequers['D'][i].setTeam(Team.two);
+                chequers['D'][i].setTeam(Settings.Team.two);
             }
             for(int i = 0; i < 10; i++)
             {
-                chequers['E'][i].setTeam(Team.three);
+                chequers['E'][i].setTeam(Settings.Team.three);
             }
         }
         else if(teamNum == 6)
         {
             for(int i = 0; i < 10; i++)
             {
-                chequers['A'][i].setTeam(Team.one);
+                chequers['A'][i].setTeam(Settings.Team.one);
             }
             for(int i = 0; i < 10; i++)
             {
-                chequers['F'][i].setTeam(Team.two);
+                chequers['F'][i].setTeam(Settings.Team.two);
             }
             for(int i = 0; i < 10; i++)
             {
-                chequers['D'][i].setTeam(Team.three);
+                chequers['D'][i].setTeam(Settings.Team.three);
             }
             for(int i = 0; i < 10; i++)
             {
-                chequers['B'][i].setTeam(Team.four);
+                chequers['B'][i].setTeam(Settings.Team.four);
             }
             for(int i = 0; i < 10; i++)
             {
-                chequers['E'][i].setTeam(Team.five);
+                chequers['E'][i].setTeam(Settings.Team.five);
             }
             for(int i = 0; i < 10; i++)
             {
-                chequers['C'][i].setTeam(Team.six);
+                chequers['C'][i].setTeam(Settings.Team.six);
             }
         }
         else
@@ -144,24 +142,24 @@ public class Board extends JPanel
         else return null;
     }
 
-    public Team circulateTeam()
+    public Settings.Team circulateTeam()
     {
         int nTeam = nowTeam.ordinal();
         nTeam++;
         if(nTeam > teamNum - 1)
             nTeam = 0;
 
-        nowTeam = Team.values()[nTeam];
+        nowTeam = Settings.Team.values()[nTeam];
         return nowTeam;
     }
 
     // 状态
-    public void setStatus(BoardStatus boardStatus)
+    public void setStatus(Settings.BoardStatus boardStatus)
     {
         status = boardStatus;
     }
 
-    public BoardStatus getStatus()
+    public Settings.BoardStatus getStatus()
     {
         return status;
     }
@@ -357,19 +355,19 @@ public class Board extends JPanel
         }
 
         // 画提示
-        if(getStatus() == BoardStatus.started)
+        if(getStatus() == Settings.BoardStatus.started)
         {
             graphics.drawString("是现在该走的一方", 655 * Settings.BOARD_SIZE / 900,120 * Settings.BOARD_SIZE / 900);
             graphics.setColor(Settings.CHEQUER_COLOR[nowTeam.ordinal()]);
             graphics.fillOval(620 * Settings.BOARD_SIZE / 900,105 * Settings.BOARD_SIZE / 900, 2*Settings.CHEQUER_RADIUS, 2*Settings.CHEQUER_RADIUS);
         }
-        else if(getStatus() == BoardStatus.paused)
+        else if(getStatus() == Settings.BoardStatus.paused)
         {
             graphics.drawString("暂停中", 655 * Settings.BOARD_SIZE / 900,120 * Settings.BOARD_SIZE / 900);
         }
 
         // 画棋子
-        if(getStatus() != BoardStatus.initial)
+        if(getStatus() != Settings.BoardStatus.initial)
         {
             for(char i = '0'; i <= 'F'; i++)
             {
@@ -390,13 +388,13 @@ public class Board extends JPanel
         return chequers[pos.group][pos.num];
     }
 
-    public Team checkSituation()  // 检查状态，返回赢的队伍或者或者draw或者Team.noTeam
+    public Settings.Team checkSituation()  // 检查状态，返回赢的队伍或者或者draw或者Team.noTeam
     {
-        Team result = Team.noTeam;
+        Settings.Team result = Settings.Team.noTeam;
 
         if(teamNum == 2)
         {
-            Team[] alphaTeam = {Team.two, Team.one};
+            Settings.Team[] alphaTeam = {Settings.Team.two, Settings.Team.one};
             boolean [] teamWin = new boolean[2];
 
             for(int i = 0; i < 2; i++)
@@ -419,7 +417,7 @@ public class Board extends JPanel
 
             if(cnt == 0)
             {
-                result = Team.noTeam;
+                result = Settings.Team.noTeam;
             }
             else if(cnt == 1)
             {
@@ -429,12 +427,12 @@ public class Board extends JPanel
             }
             else
             {
-                result = Team.draw;
+                result = Settings.Team.draw;
             }
         }
         else if(teamNum == 3)
         {
-            Team[] alphaTeam = {Team.noTeam, Team.one, Team.two, Team.noTeam, Team.noTeam, Team.three};
+            Settings.Team[] alphaTeam = {Settings.Team.noTeam, Settings.Team.one, Settings.Team.two, Settings.Team.noTeam, Settings.Team.noTeam, Settings.Team.three};
             boolean [] teamWin = new boolean[6];
 
             for(int i = 0; i < 6; i++)
@@ -442,7 +440,7 @@ public class Board extends JPanel
 
             for(int i = 'A'; i <= 'F'; i++)
             {
-                if(alphaTeam[i - 'A'] == Team.noTeam)
+                if(alphaTeam[i - 'A'] == Settings.Team.noTeam)
                     continue;
                 for(int j = 0; teamWin[alphaTeam[i - 'A'].ordinal()] && j < 10; j++)
                 {
@@ -455,7 +453,7 @@ public class Board extends JPanel
             int cnt = 0;
             for(int i = 'A'; i <= 'F'; i++)
             {
-                if(alphaTeam[i - 'A'] == Team.noTeam)
+                if(alphaTeam[i - 'A'] == Settings.Team.noTeam)
                     continue;
                 if(teamWin[alphaTeam[i - 'A'].ordinal()])
                     cnt++;
@@ -463,13 +461,13 @@ public class Board extends JPanel
 
             if(cnt == 0)
             {
-                result = Team.noTeam;
+                result = Settings.Team.noTeam;
             }
             else if(cnt == 1)
             {
                 for(int i = 'A'; i <= 'F'; i++)
                 {
-                    if(alphaTeam[i - 'A'] == Team.noTeam)
+                    if(alphaTeam[i - 'A'] == Settings.Team.noTeam)
                         continue;
                     if(teamWin[alphaTeam[i - 'A'].ordinal()])
                         result = alphaTeam[i - 'A'];
@@ -477,13 +475,13 @@ public class Board extends JPanel
             }
             else
             {
-                result = Team.draw;
+                result = Settings.Team.draw;
             }
         }
         else if (teamNum == 6)
         {
             //char teamAlpha[] = {'A', 'F', 'D', 'B', 'E', 'C'};
-            Team [] alphaTeam = {Team.one, Team.four, Team.six, Team.three, Team.five, Team.two};
+            Settings.Team[] alphaTeam = {Settings.Team.one, Settings.Team.four, Settings.Team.six, Settings.Team.three, Settings.Team.five, Settings.Team.two};
             boolean [] teamWin = new boolean[6];
 
             for(int i = 0; i < 6; i++)
@@ -506,7 +504,7 @@ public class Board extends JPanel
 
             if(cnt == 0)
             {
-                result = Team.noTeam;
+                result = Settings.Team.noTeam;
             }
             else if(cnt == 1)
             {
@@ -516,7 +514,7 @@ public class Board extends JPanel
             }
             else
             {
-                result = Team.draw;
+                result = Settings.Team.draw;
             }
         }
 
@@ -550,33 +548,33 @@ public class Board extends JPanel
     }
 
     // 搜索
-    public Vector <Pos> nearPoints(Pos from, NearPointsMode mode, int jumpLength)  // 寻找附近能跳的点
+    public Vector <Pos> nearPoints(Pos from, Settings.NearPointsMode mode, int jumpLength)  // 寻找附近能跳的点
     {
         Vector <Pos> to = new Vector<Pos>();
 
         //第一次跳
-        if(mode == NearPointsMode.goAndJump)
+        if(mode == Settings.NearPointsMode.goAndJump)
         {
             // 相邻点
             Pos temp;
 
             temp = new Coor(from).add(new Coor(Settings.SCALE, 0));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
             temp = new Coor(from).add(new Coor(-Settings.SCALE, 0));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
             temp = new Coor(from).add(new Coor((int)Math.round(Settings.SCALE * 0.5), (int)Math.round(Settings.SCALE * Math.sqrt(3) / 2.0)));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
             temp = new Coor(from).add(new Coor((int)Math.round(-Settings.SCALE * 0.5), (int)Math.round(-Settings.SCALE * Math.sqrt(3) / 2.0)));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
             temp = new Coor(from).add(new Coor((int)Math.round(-Settings.SCALE * 0.5), (int)Math.round(Settings.SCALE * Math.sqrt(3) / 2.0)));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
             temp = new Coor(from).add(new Coor((int)Math.round(Settings.SCALE * 0.5), (int)Math.round(-Settings.SCALE * Math.sqrt(3) / 2.0)));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
 
             // 不相邻点
@@ -587,7 +585,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor(i * Settings.SCALE, 0));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -602,7 +600,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor(-i * Settings.SCALE, 0));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -617,7 +615,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -632,7 +630,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -647,7 +645,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -662,7 +660,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -683,7 +681,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor(i * Settings.SCALE, 0));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -700,7 +698,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor(-i * Settings.SCALE, 0));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -717,7 +715,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -734,7 +732,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -751,7 +749,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -768,7 +766,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -784,34 +782,34 @@ public class Board extends JPanel
         return to;
     }
 
-    public Vector <Pos> nearPoints(Pos from, NearPointsMode mode)  // 寻找附近能跳的点
+    public Vector <Pos> nearPoints(Pos from, Settings.NearPointsMode mode)  // 寻找附近能跳的点
     {
         int jumpLength = 0;
         Vector <Pos> to = new Vector<Pos>();
 
         //第一次跳
-        if(mode == NearPointsMode.goAndJump)
+        if(mode == Settings.NearPointsMode.goAndJump)
         {
             // 相邻点
             Pos temp;
 
             temp = new Coor(from).add(new Coor(Settings.SCALE, 0));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
             temp = new Coor(from).add(new Coor(-Settings.SCALE, 0));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
             temp = new Coor(from).add(new Coor((int)Math.round(Settings.SCALE * 0.5), (int)Math.round(Settings.SCALE * Math.sqrt(3) / 2.0)));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
             temp = new Coor(from).add(new Coor((int)Math.round(-Settings.SCALE * 0.5), (int)Math.round(-Settings.SCALE * Math.sqrt(3) / 2.0)));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
             temp = new Coor(from).add(new Coor((int)Math.round(-Settings.SCALE * 0.5), (int)Math.round(Settings.SCALE * Math.sqrt(3) / 2.0)));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
             temp = new Coor(from).add(new Coor((int)Math.round(Settings.SCALE * 0.5), (int)Math.round(-Settings.SCALE * Math.sqrt(3) / 2.0)));
-            if(at(temp).getTeam() == Team.noTeam && temp.group != 0)
+            if(at(temp).getTeam() == Settings.Team.noTeam && temp.group != 0)
                 to.add(temp);
 
             // 不相邻点
@@ -822,7 +820,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor(i * Settings.SCALE, 0));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -837,7 +835,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor(-i * Settings.SCALE, 0));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -852,7 +850,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -867,7 +865,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -882,7 +880,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -897,7 +895,7 @@ public class Board extends JPanel
                 temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -918,7 +916,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor(i * Settings.SCALE, 0));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -935,7 +933,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor(-i * Settings.SCALE, 0));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -952,7 +950,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -969,7 +967,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -986,7 +984,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor((int)Math.round(-i * Settings.SCALE * 0.5), (int)Math.round(i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -1003,7 +1001,7 @@ public class Board extends JPanel
                 Pos temp = new Coor(from).add(new Coor((int)Math.round(i * Settings.SCALE * 0.5), (int)Math.round(-i * Settings.SCALE * Math.sqrt(3) / 2)));
                 if(temp.group == 0 || nowPoints > 1)
                     break;
-                if(at(temp).getTeam() != Team.noTeam)
+                if(at(temp).getTeam() != Settings.Team.noTeam)
                 {
                     nowPoints++;
                     mid = i;
@@ -1039,9 +1037,9 @@ public class Board extends JPanel
 
         Vector <Pos> nowPoints = new Vector<Pos>();
         if(nowJumpLength == -1)
-            nowPoints = nearPoints(from, NearPointsMode.goAndJump);
+            nowPoints = nearPoints(from, Settings.NearPointsMode.goAndJump);
         else
-            nowPoints = nearPoints(from, NearPointsMode.jump, nowJumpLength);
+            nowPoints = nearPoints(from, Settings.NearPointsMode.jump, nowJumpLength);
 
         while(!nowPoints.isEmpty())
         {
@@ -1103,9 +1101,9 @@ public class Board extends JPanel
 
     // 普通数据成员
     final Chequer [][] chequers = new Chequer[256][20];
-    private BoardStatus status = BoardStatus.initial;
+    private Settings.BoardStatus status = Settings.BoardStatus.initial;
     private int teamNum;
-    Team nowTeam = Team.noTeam;
+    Settings.Team nowTeam = Settings.Team.noTeam;
     Pos nowSelected = new Pos();
 
     // 路径数据成员

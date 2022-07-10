@@ -1,11 +1,7 @@
-package ChineseChequers;
+package ChineseChequers.Client;
 
-import java.util.Set;
-import ChineseChequers.Settings.*;
-import com.sun.nio.file.SensitivityWatchEventModifier;
-import jdk.jshell.execution.Util;
+import ChineseChequers.Client.Settings.*;
 
-import javax.swing.*;
 import java.awt.*;
 
 // 棋子类

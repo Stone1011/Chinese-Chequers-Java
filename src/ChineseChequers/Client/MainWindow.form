@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ChineseChequers.Client.MainWindow">
+  <grid id="27dc6" binding="mainWindowForm" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="704" height="435"/>
+    </constraints>
+    <properties>
+      <preferredSize width="600" height="400"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <component id="3ec54" class="javax.swing.JButton" binding="offlineButton">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="离线热座模式"/>
+        </properties>
+      </component>
+      <component id="9f1a9" class="javax.swing.JButton" binding="onlineButton">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="在线对抗模式"/>
+        </properties>
+      </component>
+      <component id="e6d84" class="javax.swing.JButton" binding="instructionsButton">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="规则说明"/>
+        </properties>
+      </component>
+      <component id="a548c" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="禹卫书法云墨简体" size="26" style="0"/>
+          <text value="欢迎游玩多人联机跳棋"/>
+        </properties>
+      </component>
+      <component id="7cf5f" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="禹卫书法云墨简体" size="26" style="0"/>
+          <text value="By SYF、MJZ"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

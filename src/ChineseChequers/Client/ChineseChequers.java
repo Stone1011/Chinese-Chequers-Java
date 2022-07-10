@@ -18,6 +18,11 @@ public class ChineseChequers extends JFrame
     private JButton backButton;
     private JTextArea messageBox;
 
+    void closeWindow()
+    {
+        this.setVisible(false);
+    }
+
     public ChineseChequers()
     {
         board = new Board(2);
@@ -192,7 +197,12 @@ public class ChineseChequers extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            // TODO: fix after designing main window
+            int confirm = JOptionPane.showConfirmDialog(null, "请确认是否回到主菜单！","请确认", JOptionPane.YES_NO_OPTION);
+            if(confirm != JOptionPane.YES_OPTION)
+                return;
+
+            closeWindow();
+            new MainWindow();
         }
     }
 

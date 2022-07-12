@@ -53,7 +53,7 @@ public class MainWindow extends JFrame
                 return;
 
             closeWindow();
-            // Todo
+            new Connect();
         }
     }
 

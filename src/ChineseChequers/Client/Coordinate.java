@@ -42,7 +42,7 @@ class Pos
     {
         return group == other.group && num == other.num;
     }
-};
+}
 
 
 // Coor类
@@ -94,4 +94,4 @@ class Coor
     {
         return Math.sqrt((x - coor.x) * (x - coor.x) + (y - coor.y) * (y - coor.y)) <= Settings.EQUAL_LIMIT;
     }
-};
+}

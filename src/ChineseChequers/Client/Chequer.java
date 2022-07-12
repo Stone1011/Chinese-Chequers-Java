@@ -104,4 +104,4 @@ public class Chequer
     // 数据成员
     private Team team;
     private ChequerStatus status;
-};
+}

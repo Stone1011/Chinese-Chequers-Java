@@ -5,13 +5,13 @@ import java.awt.*;
 public class Settings
 {
     // 定义需要用到的枚举量
-    enum Team {one, two, three, four, five, six, noTeam, draw /*, VIP*/};
-    enum BoardStatus {locked, started, finished, paused, initial};
-    enum ChequerStatus {selected, unselected, accessing};
-    enum NetStatus {connecting, connected, unconnected, offline};
-    enum NetError {};   // 待完善
-    enum NearPointsMode {jump, goAndJump};
-    enum OP {SETROOM, SUCCESS, FAIL, START, MOVE, JUDGE, CHAT};
+    enum Team {one, two, three, four, five, six, noTeam, draw /*, VIP*/}
+    enum BoardStatus {locked, started, finished, paused, initial}
+    enum ChequerStatus {selected, unselected, accessing}
+    enum NetStatus {connecting, connected, unconnected, offline}
+    enum NetError {}   // 待完善
+    enum NearPointsMode {jump, goAndJump}
+    enum OP {SETROOM, SUCCESS, FAIL, START, MOVE, JUDGE, CHAT}
 
     // 定义需要用到的常量（待完善）
     // 棋盘属性

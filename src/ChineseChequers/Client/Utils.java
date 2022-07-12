@@ -149,7 +149,7 @@ public class Utils
             }
             else if (pos.num == 4)
             {
-                x += (9.0) * l * Settings.SCALE;;
+                x += (9.0) * l * Settings.SCALE;
                 y += (5.0) * h * Settings.SCALE;
             }
             else if (pos.num == 5)
@@ -202,7 +202,7 @@ public class Utils
             }
             else if (pos.num == 4)
             {
-                x += (-9.0) * l * Settings.SCALE;;
+                x += (-9.0) * l * Settings.SCALE;
                 y += (11.0) * h * Settings.SCALE;
             }
             else if (pos.num == 5)
@@ -255,7 +255,7 @@ public class Utils
             }
             else if (pos.num == 4)
             {
-                x += (9.0) * l * Settings.SCALE;;
+                x += (9.0) * l * Settings.SCALE;
                 y += (11.0) * h * Settings.SCALE;
             }
             else if (pos.num == 5)
@@ -308,7 +308,7 @@ public class Utils
             }
             else if (pos.num == 4)
             {
-                x += (-9.0) * l * Settings.SCALE;;
+                x += (-9.0) * l * Settings.SCALE;
                 y += (5.0) * h * Settings.SCALE;
             }
             else if (pos.num == 5)

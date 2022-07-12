@@ -47,7 +47,9 @@
                   </component>
                   <scrollpane id="1e027">
                     <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <maximum-size width="150" height="500"/>
+                      </grid>
                     </constraints>
                     <properties/>
                     <border type="none"/>
@@ -56,6 +58,9 @@
                         <constraints/>
                         <properties>
                           <editable value="false"/>
+                          <lineWrap value="true"/>
+                          <maximumSize width="200" height="600"/>
+                          <minimumSize width="200" height="600"/>
                         </properties>
                       </component>
                     </children>

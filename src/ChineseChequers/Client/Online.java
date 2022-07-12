@@ -348,6 +348,7 @@ public class Online extends JFrame {
             toServer.flush();
         } catch (IOException e) {
             System.err.println(e);
+            System.exit(4);
         }
     }
 

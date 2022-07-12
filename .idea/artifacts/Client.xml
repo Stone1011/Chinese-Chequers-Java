@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="ClientDemo">
-    <output-path>$PROJECT_DIR$/out/artifacts/ClientDemo</output-path>
+  <artifact type="jar" name="Client">
+    <output-path>$PROJECT_DIR$/out/artifacts/Client</output-path>
     <root id="archive" name="ChineseChequers.jar">
       <element id="module-output" name="ChineseChequers" />
     </root>

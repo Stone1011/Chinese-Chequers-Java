@@ -36,7 +36,8 @@ public class Server extends JFrame {
             textArea.append("Server started at " + new Date() + '\n');
             PortTestArea.append(String.valueOf(portNum));
             // IP地址
-
+            InetAddress address = InetAddress.getLocalHost();
+            IPTextArea.setText(address.getHostAddress());
 
             int clientNo = 1;  //clientNUM
             while (clientNo <= player_number) {  //循环接受client
@@ -84,6 +85,7 @@ public class Server extends JFrame {
             }
         } catch (IOException e) {
             System.err.println(e);
+            System.exit(3);
         }
     }
 
@@ -138,6 +140,7 @@ public class Server extends JFrame {
 
         } catch (IOException e) {
             System.err.println(e);
+            System.exit(2);
         }
         return null;
     }

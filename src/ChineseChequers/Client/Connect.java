@@ -28,10 +28,27 @@ public class Connect extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //Button1.add(new Connect.Button1());
+        Button1.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                int confirm = JOptionPane.showConfirmDialog(null, "请确认是否回到主菜单！","请确认", JOptionPane.YES_NO_OPTION);
+                if(confirm != JOptionPane.YES_OPTION)
+                    return;
+                closeWindow();
+                new MainWindow();
+            }
+        });
         Button2.addActionListener(new Connect.Button2Action());
 
         //board = new Board(2);
         //board.setSize(Settings.BOARD_SIZE, Settings.BOARD_SIZE);
+    }
+
+    void closeWindow()
+    {
+        setVisible(false);
     }
 
     class Button2Action implements ActionListener {
